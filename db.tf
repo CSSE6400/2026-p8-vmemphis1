@@ -14,10 +14,20 @@ resource "aws_db_instance" "taskoverflow_database" {
   password               = local.database_password
   parameter_group_name   = "default.postgres14"
   skip_final_snapshot    = true
+  db_subnet_group_name   = aws_db_subnet_group.taskoverflow_database.name
   vpc_security_group_ids = [aws_security_group.taskoverflow_database.id]
   publicly_accessible    = true
   tags = {
     name = "taskoverflow_database"
+  }
+}
+
+resource "aws_db_subnet_group" "taskoverflow_database" {
+  name       = "taskoverflow-database-subnet-group"
+  subnet_ids = data.aws_subnets.private.ids
+
+  tags = {
+    name = "taskoverflow_database_subnet_group"
   }
 }
 
